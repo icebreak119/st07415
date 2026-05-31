@@ -273,16 +273,20 @@ async function confirmOrder() {
 // --- PushPlus 推送 ---
 const PUSHPLUS_TOKEN = 'ba92735cd33b4ab19720182fabb82064';
 
-function pushOrder(cartItems) {
+async function pushOrder(cartItems) {
   const total = cartItems.reduce((s, c) => s + c.qty, 0);
-  const lines = cartItems.map(c => {
+  const lines = [];
+
+  for (const c of cartItems) {
     const cat = DB.categories.find(ct => ct.id === c.dish.category);
     const icon = cat ? cat.icon + ' ' : '';
-    const photo = c.dish.photo
-      ? `<br><img src="${c.dish.photo}" style="max-width:200px;border-radius:8px;margin:4px 0">`
-      : '';
-    return `${icon}${c.dish.name}${c.qty > 1 ? ' × ' + c.qty : ''}${photo}`;
-  });
+    let photo = '';
+    if (c.dish.photo) {
+      const small = await compressForPush(c.dish.photo);
+      photo = `<br><img src="${small}" style="max-width:150px;border-radius:8px;margin:4px 0">`;
+    }
+    lines.push(`${icon}${c.dish.name}${c.qty > 1 ? ' × ' + c.qty : ''}${photo}`);
+  }
 
   const content = lines.join('<br>');
   const title = `🍽️ 新订单 · 共 ${total} 道菜`;
@@ -297,6 +301,22 @@ function pushOrder(cartItems) {
       template: 'html'
     })
   }).catch(() => {}); // 静默失败，不影响下单体验
+}
+
+// 压缩图片用于推送（100px + 40%质量，约 3-5KB）
+function compressForPush(dataUrl) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 100;
+      canvas.height = 100;
+      canvas.getContext('2d').drawImage(img, 0, 0, 100, 100);
+      resolve(canvas.toDataURL('image/jpeg', 0.4));
+    };
+    img.onerror = () => resolve(''); // 失败就跳过图片
+    img.src = dataUrl;
+  });
 }
 
 // --- Orders ---
