@@ -99,7 +99,7 @@ ul, ol { list-style: none; }
   right: 0;
   height: calc(var(--nav-h) + var(--safe-bottom));
   padding-bottom: var(--safe-bottom);
-  background: rgba(255, 249, 247, 0.85);
+  background: rgba(245, 249, 255, 0.85);
   -webkit-backdrop-filter: blur(20px) saturate(1.8);
   backdrop-filter: blur(20px) saturate(1.8);
   border-top: 1px solid var(--border);
@@ -393,13 +393,6 @@ ul, ol { list-style: none; }
   text-overflow: ellipsis;
 }
 
-.dish-item__left {
-  display: flex;
-  align-items: center;
-  flex: 1;
-  min-width: 0;
-}
-
 .btn-add {
   width: 40px;
   height: 40px;
@@ -455,15 +448,6 @@ ul, ol { list-style: none; }
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
-}
-
-.btn-del svg {
-  width: 16px;
-  height: 16px;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 2;
-  stroke-linecap: round;
 }
 
 /* --- Cart Item --- */
