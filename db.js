@@ -13,7 +13,11 @@ const CATEGORIES = [
   { id: 'restaurant',  name: '下馆子', icon: '🍽️' }
 ];
 
+// 缓存数据库连接
+let dbInstance = null;
+
 function openDB() {
+  if (dbInstance) return Promise.resolve(dbInstance);
   return new Promise((resolve, reject) => {
     const req = indexedDB.open(DB_NAME, DB_VERSION);
     req.onupgradeneeded = e => {
@@ -26,7 +30,10 @@ function openDB() {
         db.createObjectStore('orders', { keyPath: 'id' });
       }
     };
-    req.onsuccess = () => resolve(req.result);
+    req.onsuccess = () => {
+      dbInstance = req.result;
+      resolve(dbInstance);
+    };
     req.onerror = () => reject(req.error);
   });
 }

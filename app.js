@@ -3,11 +3,21 @@
    ═══════════════════════════════════════════ */
 
 // --- State ---
-let cart = [];          // [{dish, qty}]
+let cart = loadCart();   // [{dish, qty}] — 从 localStorage 恢复
 let currentCategory = null;
 let manageCategory = 'stir-fry';
 let allDishes = [];
 let pendingPhoto = null; // base64 data URL of selected photo
+
+function loadCart() {
+  try {
+    return JSON.parse(localStorage.getItem('st07415_cart') || '[]');
+  } catch { return []; }
+}
+
+function saveCart() {
+  localStorage.setItem('st07415_cart', JSON.stringify(cart));
+}
 
 // --- Init ---
 document.addEventListener('DOMContentLoaded', async () => {
@@ -150,6 +160,7 @@ function addToCart(dish) {
   } else {
     cart.push({ dish, qty: 1 });
   }
+  saveCart();
   updateCartBadge();
   showToast(`已加入「${dish.name}」`);
 }
@@ -228,6 +239,7 @@ function renderCart() {
         if (action === 'plus') cart[idx].qty++;
         else cart[idx].qty--;
         if (cart[idx].qty <= 0) cart.splice(idx, 1);
+        saveCart();
         renderCart();
         updateCartBadge();
       });
@@ -252,6 +264,7 @@ async function confirmOrder() {
   pushOrder(cart);
 
   cart = [];
+  saveCart();
   updateCartBadge();
   showToast('下单成功！');
   navigateTo('history');
