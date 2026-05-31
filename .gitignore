@@ -1,0 +1,10 @@
+.claude/
+.taste-skill.md
+start.bat
+node_modules/
+dist/
+ios/
+android/
+capacitor.config.json
+package.json
+package-lock.json
