@@ -278,7 +278,10 @@ function pushOrder(cartItems) {
   const lines = cartItems.map(c => {
     const cat = DB.categories.find(ct => ct.id === c.dish.category);
     const icon = cat ? cat.icon + ' ' : '';
-    return `${icon}${c.dish.name}${c.qty > 1 ? ' × ' + c.qty : ''}`;
+    const photo = c.dish.photo
+      ? `<br><img src="${c.dish.photo}" style="max-width:200px;border-radius:8px;margin:4px 0">`
+      : '';
+    return `${icon}${c.dish.name}${c.qty > 1 ? ' × ' + c.qty : ''}${photo}`;
   });
 
   const content = lines.join('<br>');
