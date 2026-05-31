@@ -271,7 +271,7 @@ async function confirmOrder() {
 }
 
 // --- PushPlus 推送 ---
-// Token 从 config.js 读取，不硬编码在代码中
+const PUSHPLUS_TOKEN = 'ba92735cd33b4ab19720182fabb82064';
 
 function pushOrder(cartItems) {
   const total = cartItems.reduce((s, c) => s + c.qty, 0);
