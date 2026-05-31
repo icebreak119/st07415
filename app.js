@@ -273,20 +273,37 @@ async function confirmOrder() {
 // --- PushPlus 推送 ---
 const PUSHPLUS_TOKEN = 'ba92735cd33b4ab19720182fabb82064';
 
-async function pushOrder(cartItems) {
-  const total = cartItems.reduce((s, c) => s + c.qty, 0);
-  const lines = [];
+// --- imgbb 图床 ---
+const IMGBB_KEY = '24e988234ef6b2e9c970567de8453f43';
 
-  for (const c of cartItems) {
+async function uploadToImgbb(base64DataUrl) {
+  // 去掉 data:image/xxx;base64, 前缀
+  const base64 = base64DataUrl.split(',')[1];
+  const formData = new FormData();
+  formData.append('key', IMGBB_KEY);
+  formData.append('image', base64);
+
+  try {
+    const resp = await fetch('https://api.imgbb.com/1/upload', {
+      method: 'POST',
+      body: formData
+    });
+    const data = await resp.json();
+    if (data.success) return data.data.url;
+  } catch {}
+  return null;
+}
+
+function pushOrder(cartItems) {
+  const total = cartItems.reduce((s, c) => s + c.qty, 0);
+  const lines = cartItems.map(c => {
     const cat = DB.categories.find(ct => ct.id === c.dish.category);
     const icon = cat ? cat.icon + ' ' : '';
-    let photo = '';
-    if (c.dish.photo) {
-      const small = await compressForPush(c.dish.photo);
-      photo = `<br><img src="${small}" style="max-width:150px;border-radius:8px;margin:4px 0">`;
-    }
-    lines.push(`${icon}${c.dish.name}${c.qty > 1 ? ' × ' + c.qty : ''}${photo}`);
-  }
+    const photo = c.dish.photoUrl
+      ? `<br><img src="${c.dish.photoUrl}" style="max-width:150px;border-radius:8px;margin:4px 0">`
+      : '';
+    return `${icon}${c.dish.name}${c.qty > 1 ? ' × ' + c.qty : ''}${photo}`;
+  });
 
   const content = lines.join('<br>');
   const title = `🍽️ 新订单 · 共 ${total} 道菜`;
@@ -301,22 +318,6 @@ async function pushOrder(cartItems) {
       template: 'html'
     })
   }).catch(() => {}); // 静默失败，不影响下单体验
-}
-
-// 压缩图片用于推送（100px + 40%质量，约 3-5KB）
-function compressForPush(dataUrl) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = 100;
-      canvas.height = 100;
-      canvas.getContext('2d').drawImage(img, 0, 0, 100, 100);
-      resolve(canvas.toDataURL('image/jpeg', 0.4));
-    };
-    img.onerror = () => resolve(''); // 失败就跳过图片
-    img.src = dataUrl;
-  });
 }
 
 // --- Orders ---
@@ -614,11 +615,18 @@ async function addDish() {
     return;
   }
 
+  let photoUrl = null;
+  if (pendingPhoto) {
+    showToast('正在上传照片...');
+    photoUrl = await uploadToImgbb(pendingPhoto);
+  }
+
   await DB.addDish({
     name,
     note: noteInput.value.trim(),
     category: manageCategory,
-    photo: pendingPhoto || null
+    photo: pendingPhoto || null,
+    photoUrl: photoUrl || null
   });
 
   nameInput.value = '';
