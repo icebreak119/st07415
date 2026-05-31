@@ -48,15 +48,8 @@ function promisify(request) {
 
 // --- 初始菜品数据 ---
 const SEED_DISHES = [
-  { id: 'seed-1',  name: '章鱼小丸子', note: '外酥里嫩', category: 'snack' },
-  { id: 'seed-2',  name: '青提',       note: '新鲜清甜', category: 'fruit' },
-  { id: 'seed-3',  name: '珍珠奶茶',   note: '少糖去冰', category: 'milk-tea' },
-  { id: 'seed-4',  name: '草莓蛋糕',   note: '奶油味',   category: 'dessert' },
-  { id: 'seed-5',  name: '番茄炒蛋',   note: '家常味道', category: 'stir-fry' },
-  { id: 'seed-6',  name: '红烧牛肉面', note: '多加牛肉', category: 'noodles' },
-  { id: 'seed-7',  name: '红烧肉',     note: '肥而不腻', category: 'meat' },
-  { id: 'seed-8',  name: '清炒西兰花', note: '少油',     category: 'veggie' },
-  { id: 'seed-9',  name: '麻辣烫',     note: '微辣',     category: 'restaurant' },
+  { id: 'seed-1',  name: '章鱼小丸子', note: '', category: 'snack' },
+  { id: 'seed-2',  name: '青提',       note: '', category: 'fruit' },
 ];
 
 async function seedDishes() {
