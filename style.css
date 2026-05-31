@@ -2,27 +2,27 @@
    ST07415 — Design System
    Design Read: Personal food ordering PWA
    Dials: VARIANCE 6 / MOTION 5 / DENSITY 3
-   Palette: Rose accent on warm off-white
+   Palette: Soft blue accent on cool white
    ═══════════════════════════════════════════ */
 
 /* --- Tokens --- */
 :root {
-  --bg:          #FFF9F7;
+  --bg:          #F5F9FF;
   --bg-card:     #FFFFFF;
-  --bg-elevated: #FFF5F2;
-  --accent:      #E8706A;
-  --accent-dark: #D45A54;
-  --accent-light:#FCEAE8;
-  --secondary:   #F5A623;
-  --secondary-light: #FEF3E0;
-  --text:        #2D2A26;
-  --text-sub:    #8A8580;
-  --text-ghost:  #B8B3AE;
-  --border:      #F0EBE8;
-  --border-accent: rgba(232, 112, 106, 0.2);
-  --shadow-sm:   0 1px 3px rgba(232, 112, 106, 0.06), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md:   0 4px 16px rgba(232, 112, 106, 0.08), 0 2px 4px rgba(0,0,0,0.04);
-  --shadow-lg:   0 8px 32px rgba(232, 112, 106, 0.12), 0 4px 8px rgba(0,0,0,0.06);
+  --bg-elevated: #EDF4FC;
+  --accent:      #5B9BD5;
+  --accent-dark: #4A8AC4;
+  --accent-light:#E1EFF9;
+  --secondary:   #7EC8E3;
+  --secondary-light: #E6F6FC;
+  --text:        #2D3A4A;
+  --text-sub:    #8A96A3;
+  --text-ghost:  #B5C0CC;
+  --border:      #E0EAF3;
+  --border-accent: rgba(91, 155, 213, 0.2);
+  --shadow-sm:   0 1px 3px rgba(91, 155, 213, 0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:   0 4px 16px rgba(91, 155, 213, 0.12), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg:   0 8px 32px rgba(91, 155, 213, 0.16), 0 4px 8px rgba(0,0,0,0.06);
   --radius:      14px;
   --radius-sm:   10px;
   --radius-pill: 100px;
@@ -199,7 +199,7 @@ ul, ol { list-style: none; }
 .random-banner {
   margin: 0 20px 28px;
   padding: 20px 24px;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--secondary) 100%);
+  background: linear-gradient(135deg, #5B9BD5 0%, #7EC8E3 50%, #A8D8EA 100%);
   border-radius: var(--radius);
   color: white;
   display: flex;

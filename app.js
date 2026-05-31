@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   bindCart();
   bindManage();
   bindModal();
+  await seedDishes();
   await loadCategories();
   registerSW();
 });

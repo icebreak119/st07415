@@ -4,8 +4,8 @@
   "description": "专属点餐 App",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FFF9F7",
-  "theme_color": "#E8706A",
+  "background_color": "#F5F9FF",
+  "theme_color": "#5B9BD5",
   "orientation": "portrait",
   "icons": [
     {
