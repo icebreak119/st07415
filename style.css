@@ -343,25 +343,21 @@ ul, ol { list-style: none; }
 .dish-item {
   background: var(--bg-card);
   border-radius: var(--radius);
-  padding: 16px;
+  padding: 14px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 12px;
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--border);
   transition: transform 0.2s var(--spring), opacity 0.3s, max-height 0.3s var(--ease-out), margin 0.3s, padding 0.3s;
   animation: slideUp 0.3s var(--ease-out) both;
   overflow: hidden;
-  touch-action: pan-y;
-  position: relative;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .dish-item:active {
   transform: scale(0.98);
-}
-
-.dish-item.swiping {
-  transition: none;
 }
 
 .dish-item.removing {
@@ -397,23 +393,23 @@ ul, ol { list-style: none; }
   text-overflow: ellipsis;
 }
 
-.dish-item__actions {
+.dish-item__left {
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-  margin-left: 12px;
+  flex: 1;
+  min-width: 0;
 }
 
 .btn-add {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: var(--accent-light);
   color: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   transition: all 0.2s var(--spring);
 }
 
@@ -424,30 +420,41 @@ ul, ol { list-style: none; }
 }
 
 .btn-add svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.btn-del {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #fff;
+  background: #F87171;
+  transition: all 0.2s var(--spring);
+  box-shadow: 0 2px 8px rgba(248, 113, 113, 0.3);
+}
+
+.btn-del:active {
+  transform: scale(0.85);
+  background: #EF4444;
+}
+
+.btn-del svg {
   width: 18px;
   height: 18px;
   stroke: currentColor;
   fill: none;
   stroke-width: 2;
   stroke-linecap: round;
-}
-
-.btn-del {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--accent);
-  background: var(--accent-light);
-  transition: all 0.2s var(--spring);
-}
-
-.btn-del:active {
-  transform: scale(0.85);
-  background: var(--accent);
-  color: white;
+  stroke-linejoin: round;
 }
 
 .btn-del svg {
@@ -958,37 +965,6 @@ ul, ol { list-style: none; }
   color: white;
 }
 
-/* Swipe hint */
-.swipe-hint {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 80px;
-  background: var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 13px;
-  font-weight: 600;
-  border-radius: 0 var(--radius) var(--radius) 0;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-.swipe-hint.visible {
-  opacity: 1;
-}
-
-.swipe-hint svg {
-  width: 20px;
-  height: 20px;
-  stroke: white;
-  fill: none;
-  stroke-width: 2;
-  stroke-linecap: round;
-}
 
 .add-form__input {
   flex: 1;

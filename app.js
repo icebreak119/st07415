@@ -509,14 +509,9 @@ async function renderManageList() {
           ${dish.note ? `<div class="dish-item__note">${esc(dish.note)}</div>` : ''}
         </div>
       </div>
-      <div class="dish-item__actions">
-        <button class="btn-del" data-id="${dish.id}" title="删除">
-          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-        </button>
-      </div>
-      <div class="swipe-hint">
+      <button class="btn-del" data-id="${dish.id}" title="删除">
         <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-      </div>
+      </button>
     `;
 
     // Delete button click
@@ -525,46 +520,15 @@ async function renderManageList() {
       showDeleteConfirm(dish, item);
     });
 
-    // Swipe to delete
-    enableSwipeDelete(item, dish);
+    // Long press to delete
+    let pressTimer;
+    item.addEventListener('touchstart', () => {
+      pressTimer = setTimeout(() => showDeleteConfirm(dish, item), 600);
+    }, { passive: true });
+    item.addEventListener('touchend', () => clearTimeout(pressTimer));
+    item.addEventListener('touchmove', () => clearTimeout(pressTimer));
 
     list.appendChild(item);
-  });
-}
-
-// --- Swipe to Delete ---
-function enableSwipeDelete(el, dish) {
-  let startX = 0, currentX = 0, isDragging = false;
-  const threshold = 80;
-
-  el.addEventListener('touchstart', (e) => {
-    startX = e.touches[0].clientX;
-    isDragging = true;
-    el.classList.add('swiping');
-  }, { passive: true });
-
-  el.addEventListener('touchmove', (e) => {
-    if (!isDragging) return;
-    currentX = e.touches[0].clientX;
-    const diff = currentX - startX;
-    if (diff < 0) {
-      const offset = Math.max(diff, -100);
-      el.style.transform = `translateX(${offset}px)`;
-      const hint = el.querySelector('.swipe-hint');
-      if (offset < -40) hint.classList.add('visible');
-      else hint.classList.remove('visible');
-    }
-  }, { passive: true });
-
-  el.addEventListener('touchend', () => {
-    isDragging = false;
-    el.classList.remove('swiping');
-    const diff = currentX - startX;
-    if (diff < -threshold) {
-      showDeleteConfirm(dish, el);
-    }
-    el.style.transform = '';
-    el.querySelector('.swipe-hint').classList.remove('visible');
   });
 }
 
