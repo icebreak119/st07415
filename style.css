@@ -349,12 +349,29 @@ ul, ol { list-style: none; }
   justify-content: space-between;
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--border);
-  transition: transform 0.2s var(--spring);
+  transition: transform 0.2s var(--spring), opacity 0.3s, max-height 0.3s var(--ease-out), margin 0.3s, padding 0.3s;
   animation: slideUp 0.3s var(--ease-out) both;
+  overflow: hidden;
+  touch-action: pan-y;
+  position: relative;
 }
 
 .dish-item:active {
   transform: scale(0.98);
+}
+
+.dish-item.swiping {
+  transition: none;
+}
+
+.dish-item.removing {
+  transform: translateX(-100%);
+  opacity: 0;
+  max-height: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-width: 0;
 }
 
 .dish-item__info {
@@ -416,19 +433,21 @@ ul, ol { list-style: none; }
 }
 
 .btn-del {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-ghost);
-  transition: all 0.2s;
+  color: var(--accent);
+  background: var(--accent-light);
+  transition: all 0.2s var(--spring);
 }
 
 .btn-del:active {
-  color: var(--accent);
-  background: var(--accent-light);
+  transform: scale(0.85);
+  background: var(--accent);
+  color: white;
 }
 
 .btn-del svg {
@@ -865,6 +884,110 @@ ul, ol { list-style: none; }
   display: block;
   box-shadow: var(--shadow-md);
   animation: bounce 0.6s var(--spring) 0.2s both;
+}
+
+/* Confirm Dialog */
+.confirm-dialog {
+  position: fixed;
+  inset: 0;
+  background: rgba(45, 42, 38, 0.5);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  z-index: 250;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fadeIn 0.2s;
+}
+
+.confirm-box {
+  background: var(--bg-card);
+  border-radius: 20px;
+  padding: 28px 24px 20px;
+  width: 100%;
+  max-width: 280px;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  animation: modalPop 0.35s var(--spring);
+}
+
+.confirm-box__icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.confirm-box__title {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.confirm-box__desc {
+  font-size: 13px;
+  color: var(--text-sub);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.confirm-box__actions {
+  display: flex;
+  gap: 10px;
+}
+
+.confirm-box__btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s var(--spring);
+}
+
+.confirm-box__btn:active {
+  transform: scale(0.95);
+}
+
+.confirm-box__btn--cancel {
+  background: var(--bg-elevated);
+  color: var(--text);
+}
+
+.confirm-box__btn--danger {
+  background: var(--accent);
+  color: white;
+}
+
+/* Swipe hint */
+.swipe-hint {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.swipe-hint.visible {
+  opacity: 1;
+}
+
+.swipe-hint svg {
+  width: 20px;
+  height: 20px;
+  stroke: white;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
 }
 
 .add-form__input {

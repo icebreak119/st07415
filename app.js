@@ -513,15 +513,94 @@ async function renderManageList() {
           <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
         </button>
       </div>
+      <div class="swipe-hint">
+        <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      </div>
     `;
-    item.querySelector('.btn-del').addEventListener('click', async (e) => {
+
+    // Delete button click
+    item.querySelector('.btn-del').addEventListener('click', (e) => {
       e.stopPropagation();
-      await DB.deleteDish(dish.id);
-      showToast('已删除');
-      renderManageList();
-      loadCategories();
+      showDeleteConfirm(dish, item);
     });
+
+    // Swipe to delete
+    enableSwipeDelete(item, dish);
+
     list.appendChild(item);
+  });
+}
+
+// --- Swipe to Delete ---
+function enableSwipeDelete(el, dish) {
+  let startX = 0, currentX = 0, isDragging = false;
+  const threshold = 80;
+
+  el.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    isDragging = true;
+    el.classList.add('swiping');
+  }, { passive: true });
+
+  el.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    currentX = e.touches[0].clientX;
+    const diff = currentX - startX;
+    if (diff < 0) {
+      const offset = Math.max(diff, -100);
+      el.style.transform = `translateX(${offset}px)`;
+      const hint = el.querySelector('.swipe-hint');
+      if (offset < -40) hint.classList.add('visible');
+      else hint.classList.remove('visible');
+    }
+  }, { passive: true });
+
+  el.addEventListener('touchend', () => {
+    isDragging = false;
+    el.classList.remove('swiping');
+    const diff = currentX - startX;
+    if (diff < -threshold) {
+      showDeleteConfirm(dish, el);
+    }
+    el.style.transform = '';
+    el.querySelector('.swipe-hint').classList.remove('visible');
+  });
+}
+
+// --- Delete Confirm Dialog ---
+function showDeleteConfirm(dish, el) {
+  const overlay = document.createElement('div');
+  overlay.className = 'confirm-dialog';
+  overlay.innerHTML = `
+    <div class="confirm-box">
+      <div class="confirm-box__icon">🗑️</div>
+      <h3 class="confirm-box__title">删除「${esc(dish.name)}」？</h3>
+      <p class="confirm-box__desc">删除后无法恢复</p>
+      <div class="confirm-box__actions">
+        <button class="confirm-box__btn confirm-box__btn--cancel">取消</button>
+        <button class="confirm-box__btn confirm-box__btn--danger">删除</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  overlay.querySelector('.confirm-box__btn--cancel').addEventListener('click', () => {
+    overlay.remove();
+  });
+
+  overlay.querySelector('.confirm-box__btn--danger').addEventListener('click', async () => {
+    overlay.remove();
+    el.classList.add('removing');
+    await new Promise(r => setTimeout(r, 300));
+    await DB.deleteDish(dish.id);
+    showToast('已删除');
+    renderManageList();
+    loadCategories();
+  });
+
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) overlay.remove();
   });
 }
 
